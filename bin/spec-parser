@@ -1,0 +1,24 @@
+#!/usr/bin/env ruby
+
+def get_context_string(string)
+  string.partition("\'")[2].partition("\'")[0]
+end
+
+def get_it_string(string)
+  it_string = string.partition("\'")[2].partition("\'")[0]
+  "\e[32m#{it_string}\e[0m"
+end
+
+puts "\n\e[35m#{File.basename(ARGV[0])}\e[0m\n\n"
+spec = File.open(ARGV[0])
+
+new_file = []
+
+IO.foreach(spec) do |line|
+  if line.match(/^\s*context/) || line.match(/^\s*it/)
+    new_file << "#{' ' * (line[/^ */].size-2)}#{get_context_string(line)}" if line.match(/^\s*context/)
+    new_file << "#{' ' * (line[/^ */].size-2)}#{get_it_string(line)}" if line.match(/^\s*it/)
+  end
+end
+
+puts new_file

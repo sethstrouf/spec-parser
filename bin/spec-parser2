@@ -1,0 +1,51 @@
+#!/usr/bin/env ruby
+
+def get_context_string(string)
+  string.partition("\'")[2].partition("\'")[0]
+end
+
+def get_it_string(string)
+  'it ' + string.partition("\'")[2].partition("\'")[0]
+end
+
+puts "\n#{File.basename(ARGV[0])}\n\n"
+spec = File.open(ARGV[0])
+
+current_string = []
+whitespace_count = []
+new_file = []
+end_whitespace_count = 0
+example_count = 0
+
+IO.foreach(spec) do |line|
+  if line.match(/^\s*context/) || line.match(/^\s*it/) || line.match(/^\s*end/)
+    whitespace_count << line[/^ */].size if !line.match(/^\s*end/)
+    current_string << "#{get_context_string(line)}" if line.match(/^\s*context/)
+    current_string << "#{get_it_string(line)}" if line.match(/^\s*it/)
+
+    if line.match(/^\s*end/)
+      end_whitespace_count = line[/^ */].size
+      if whitespace_count[-1] == end_whitespace_count && current_string.length > 1
+        if current_string.join(' ').match(/\sit/)
+          new_file << current_string.join(', ').capitalize
+          new_file << "\n"
+          example_count += 1
+        end
+        whitespace_count.pop
+        current_string.pop
+      end
+    end
+
+  end
+end
+
+puts new_file
+puts example_count.to_s + " examples"
+
+File.write("#{Dir.home}/parsed2.txt", File.basename(ARGV[0]) + "\n\n")
+
+new_file.each do |line|
+ File.open("#{Dir.home}/parsed2.txt", 'a') do |f|
+   f.puts line
+  end
+end
