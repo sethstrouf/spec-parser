@@ -11,7 +11,7 @@ end
 puts "\n#{File.basename(ARGV[0])}\n\n"
 spec = File.open(ARGV[0])
 
-current_string = []
+current_string = ['']
 whitespace_count = []
 new_file = []
 end_whitespace_count = 0
@@ -27,7 +27,7 @@ IO.foreach(spec) do |line|
       end_whitespace_count = line[/^ */].size
       if whitespace_count[-1] == end_whitespace_count && current_string.length > 1
         if current_string.join(' ').match(/\sit/)
-          new_file << current_string.join(', ').capitalize
+          new_file << current_string.join(', ')[2..-1].capitalize
           new_file << "\n"
           example_count += 1
         end
