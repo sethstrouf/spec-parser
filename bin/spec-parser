@@ -9,7 +9,7 @@ def get_it_string(string)
   "\e[32m#{it_string}\e[0m"
 end
 
-puts "\n\e[35m#{File.basename(ARGV[0])}\e[0m\n\n"
+puts "\n\e[36m#{File.basename(ARGV[0])}\e[0m\n\n"
 spec = File.open(ARGV[0])
 
 new_file = []
@@ -21,4 +21,5 @@ IO.foreach(spec) do |line|
   end
 end
 
+new_file << "\n"
 puts new_file
