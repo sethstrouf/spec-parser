@@ -18,8 +18,9 @@ end_whitespace_count = 0
 example_count = 0
 
 IO.foreach(spec) do |line|
-  if line.match(/^\s*context/) || line.match(/^\s*it/) || line.match(/^\s*end/)
+  if line.match(/^\s*context/) || line.match(/^\s*it/) || line.match(/^\s*end/) || line.match(/^\s*describe/)
     whitespace_count << line[/^ */].size if !line.match(/^\s*end/)
+    current_string << "#{get_context_string(line)}" if line.match(/^\s*describe/)
     current_string << "#{get_context_string(line)}" if line.match(/^\s*context/)
     current_string << "#{get_it_string(line)}" if line.match(/^\s*it/)
 
